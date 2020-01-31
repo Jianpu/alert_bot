@@ -5,6 +5,8 @@ from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from twilio.rest import Client
 
+CACHE = None
+
 with open("config.json") as f:
     data = json.load(f)
     AVALON_SAN_BRUNO_LINK = data["AVALON_SAN_BRUNO_LINK"]
@@ -20,7 +22,6 @@ def polling_avalon_price():
 
     price_details = soup.findAll("div", {"class": "price"})
     room_details = soup.findAll("div", {"class": "details"})
-
     return [price.text + " " + room.text for price, room in zip(price_details, room_details)]
 
 
@@ -38,16 +39,27 @@ def send_msg(result):
             to=Reciver
 
         )
-        print("send msg at {}".format(datetime))
+        print("send msg at {}".format(date_time))
     except Exception as e:
         print(e)
+
+
+def list_got_update(result):
+    global CACHE
+    if result != CACHE:
+        CACHE = result
+        return True
+    else:
+        return False
 
 
 def run():
     while True:
         res = polling_avalon_price()
-        send_msg(res)
-        time.sleep(14400)
+        if list_got_update(res):
+            print("list updated")
+            send_msg(res)
+        time.sleep(5)
 
 
 if __name__ == '__main__':
