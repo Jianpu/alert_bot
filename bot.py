@@ -38,6 +38,7 @@ def send_msg(result):
             to=Reciver
 
         )
+        print("send msg at {}".format(datetime))
     except Exception as e:
         print(e)
 
