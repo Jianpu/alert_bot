@@ -59,7 +59,9 @@ def run():
         if list_got_update(res):
             print("list updated")
             send_msg(res)
-        time.sleep(5)
+        else:
+            print("list same")
+        time.sleep(3600)
 
 
 if __name__ == '__main__':
