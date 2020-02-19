@@ -55,12 +55,15 @@ def list_got_update(result):
 
 def run():
     while True:
-        res = polling_avalon_price()
-        if list_got_update(res):
-            print("list updated")
-            send_msg(res)
-        else:
-            print("list same")
+        try:
+            res = polling_avalon_price()
+            if list_got_update(res):
+                print("list updated")
+                send_msg(res)
+            else:
+                print("list same")
+        except:
+            time.sleep(900)
         time.sleep(3600)
 
 
